@@ -78,7 +78,7 @@ async function main(): Promise<void> {
     if (route === '/') {
       void mountMainPage(root, videoId, tabId);
     } else if (route === '/settings') {
-      mountSettingsPage(root);
+      mountSettingsPage(root, 'sidepanel');
     }
   });
 
