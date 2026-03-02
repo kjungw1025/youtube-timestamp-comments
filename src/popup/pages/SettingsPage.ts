@@ -1,15 +1,29 @@
 // SettingsPage — 설정 뷰
 // options/index.ts 의 로직을 이관하여 라우터 기반으로 동작한다.
+// mode: 'popup' | 'sidepanel' 파라미터로 전환 버튼 분기 처리
 
 import { t, setLanguage, getCurrentLanguage, getSupportedLanguages } from '../../i18n';
 import { getStorage, setStorage } from '../../utils/storage.util';
+import { checkSidePanelSupport } from '../../utils/sidepanel.util';
 import { STORAGE_KEY_API_KEY, STORAGE_KEY_THEME, THEME_DARK, THEME_LIGHT } from '../../constants';
-import type { Language } from '../../types/storage.types';
+import { MessageType } from '../../types/message.types';
+import type { Language, ViewMode } from '../../types/storage.types';
 import { router } from '../router';
 
 // ── HTML 템플릿 ───────────────────────────────────────────
 
-export function getSettingsPageHTML(): string {
+export function getSettingsPageHTML(mode: ViewMode = 'popup'): string {
+  // mode에 따라 전환 버튼 렌더링 분기
+  const switchBtnHTML = mode === 'popup'
+    ? `<!-- SidePanel 전환 버튼 (Popup → SidePanel) -->
+          <button class="header-btn header-btn-icon" id="switch-mode-btn" aria-label="Open as Side Panel" title="${t('settings', 'switchToSidePanel')}">
+            <span class="material-symbols-outlined" style="font-size:20px">side_navigation</span>
+          </button>`
+    : `<!-- Popup 전환 버튼 (SidePanel → Popup) -->
+          <button class="settings-theme-btn" id="switch-mode-btn" aria-label="Switch to Popup" title="${t('settings', 'switchToPopup')}">
+            <span class="material-icons" style="font-size:18px">picture_in_picture</span>
+          </button>`;
+
   return `
     <div class="settings-page">
 
@@ -37,6 +51,8 @@ export function getSettingsPageHTML(): string {
               </ul>
             </div>
           </div>
+
+          ${switchBtnHTML}
 
           <!-- 다크모드 토글 -->
           <button class="settings-theme-btn" id="settings-theme-btn" aria-label="Toggle dark mode">
@@ -68,6 +84,9 @@ export function getSettingsPageHTML(): string {
             </button>
           </div>
         </div>
+
+        <!-- SidePanel 에러 메시지 (Chrome 버전 미지원 시) -->
+        <p class="settings-save-message hidden" id="sidepanel-error-message"></p>
 
         <p class="settings-save-message hidden" id="settings-save-message"></p>
 
@@ -120,17 +139,23 @@ function applyI18n(apiKeyInput: HTMLInputElement): void {
   const saveBtn   = document.getElementById('settings-save-btn');
   const guideText = document.getElementById('settings-guide-text');
   const guideLink = document.getElementById('settings-guide-link') as HTMLAnchorElement | null;
+  const switchBtn = document.getElementById('switch-mode-btn');
 
-  if (mainTitle) mainTitle.textContent = t('options', 'title');
-  if (subtitle)  subtitle.textContent  = t('options', 'subtitle');
-  if (apiLabel)  apiLabel.textContent  = t('options', 'apiKeyLabel');
-  if (saveBtn)   saveBtn.textContent   = t('options', 'setupButton');
-  if (guideText) guideText.textContent = t('options', 'guideText');
+  if (mainTitle)  mainTitle.textContent  = t('options', 'title');
+  if (subtitle)   subtitle.textContent   = t('options', 'subtitle');
+  if (apiLabel)   apiLabel.textContent   = t('options', 'apiKeyLabel');
+  if (saveBtn)    saveBtn.textContent    = t('options', 'setupButton');
+  if (guideText)  guideText.textContent  = t('options', 'guideText');
+  if (switchBtn) {
+    // mode에 따라 title 속성 갱신
+    const isPopup = switchBtn.getAttribute('aria-label') === 'Open as Side Panel';
+    switchBtn.title = isPopup
+      ? t('settings', 'switchToSidePanel')
+      : t('settings', 'switchToPopup');
+  }
   if (guideLink) {
-    // 텍스트 노드만 업데이트 (icon 요소 보존)
     const textNode = Array.from(guideLink.childNodes).find((n) => n.nodeType === Node.TEXT_NODE);
     if (textNode) textNode.textContent = t('options', 'guideLink') + ' ';
-    // 현재 언어에 맞는 가이드 링크로 업데이트
     const lang = getCurrentLanguage();
     guideLink.href = GUIDE_LINKS[lang] ?? GUIDE_LINKS['en'];
   }
@@ -147,21 +172,55 @@ function updateActiveLangItem(langLabel: HTMLElement): void {
   if (found) langLabel.textContent = found.label;
 }
 
+// ── SidePanel 전환 안내 화면 ──────────────────────────────
+
+function showSwitchToPopupMessage(root: HTMLElement): void {
+  root.innerHTML = `
+    <div style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 16px;
+      text-align: center;
+      padding: 24px;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    ">
+      <span class="material-icons" style="font-size:48px; color: var(--color-primary);">check_circle</span>
+      <div>
+        <p style="font-size:15px; font-weight:600; margin-bottom:8px;" id="switched-title"></p>
+        <p style="font-size:13px; color: var(--text-secondary); line-height:1.6;" id="switched-guide"></p>
+      </div>
+      <p style="font-size:11px; color: var(--text-muted); margin-top:8px;" id="switched-hint"></p>
+    </div>
+  `;
+  const titleEl = document.getElementById('switched-title');
+  const guideEl = document.getElementById('switched-guide');
+  const hintEl  = document.getElementById('switched-hint');
+  if (titleEl) titleEl.textContent = t('settings', 'switchedToPopup');
+  if (guideEl) guideEl.textContent = t('settings', 'switchedToPopupGuide');
+  if (hintEl)  hintEl.textContent  = 'Please close this panel manually.';
+}
+
 // ── 마운트 ────────────────────────────────────────────────
 
-export function mountSettingsPage(root: HTMLElement): void {
-  root.innerHTML = getSettingsPageHTML();
+export function mountSettingsPage(root: HTMLElement, mode: ViewMode = 'popup'): void {
+  root.innerHTML = getSettingsPageHTML(mode);
 
-  const backBtn       = getEl('settings-back-btn');
-  const apiKeyInput   = getEl<HTMLInputElement>('settings-api-key');
-  const visibilityBtn = getEl('settings-visibility-btn');
-  const eyeIcon       = getEl('settings-eye-icon');
-  const saveBtn       = getEl('settings-save-btn');
-  const saveMsg       = getEl('settings-save-message');
-  const langBtn       = getEl('lang-btn');
-  const langMenu      = getEl('lang-menu');
-  const langLabel     = getEl('lang-label');
-  const themeBtn      = getEl('settings-theme-btn');
+  const backBtn        = getEl('settings-back-btn');
+  const apiKeyInput    = getEl<HTMLInputElement>('settings-api-key');
+  const visibilityBtn  = getEl('settings-visibility-btn');
+  const eyeIcon        = getEl('settings-eye-icon');
+  const saveBtn        = getEl('settings-save-btn');
+  const saveMsg        = getEl('settings-save-message');
+  const sidepanelErrEl = getEl('sidepanel-error-message');
+  const langBtn        = getEl('lang-btn');
+  const langMenu       = getEl('lang-menu');
+  const langLabel      = getEl('lang-label');
+  const themeBtn       = getEl('settings-theme-btn');
+  const switchModeBtn  = getEl('switch-mode-btn');
 
   // 저장된 API Key 로드
   void getStorage(STORAGE_KEY_API_KEY).then((key) => {
@@ -172,9 +231,8 @@ export function mountSettingsPage(root: HTMLElement): void {
   applyI18n(apiKeyInput);
   updateActiveLangItem(langLabel);
 
-  // ← 뒤로가기 + document 리스너 정리는 아래 onDocumentClick 블록에서 함께 처리
+  // ── API Key 저장 ────────────────────────────────────────
 
-  // API Key 저장
   let saveTimeout: number;
 
   function showSaveMsg(text: string, type: 'success' | 'error'): void {
@@ -196,20 +254,23 @@ export function mountSettingsPage(root: HTMLElement): void {
   saveBtn.addEventListener('click', () => { void saveApiKey(); });
   apiKeyInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') void saveApiKey(); });
 
-  // 비밀번호 토글
+  // ── 비밀번호 토글 ───────────────────────────────────────
+
   visibilityBtn.addEventListener('click', () => {
     const isPass = apiKeyInput.type === 'password';
     apiKeyInput.type = isPass ? 'text' : 'password';
     eyeIcon.textContent = isPass ? 'visibility_off' : 'visibility';
   });
 
-  // 다크모드 토글
+  // ── 다크모드 토글 ───────────────────────────────────────
+
   themeBtn.addEventListener('click', () => {
     const isDark = document.documentElement.classList.toggle('dark');
     void setStorage({ [STORAGE_KEY_THEME]: isDark ? THEME_DARK : THEME_LIGHT });
   });
 
-  // 언어 드롭다운
+  // ── 언어 드롭다운 ───────────────────────────────────────
+
   function openLangMenu(): void  { langMenu.classList.add('open');    langBtn.setAttribute('aria-expanded', 'true');  }
   function closeLangMenu(): void { langMenu.classList.remove('open'); langBtn.setAttribute('aria-expanded', 'false'); }
 
@@ -231,7 +292,6 @@ export function mountSettingsPage(root: HTMLElement): void {
     });
   });
 
-  // named function으로 선언하여 페이지 이탈 시 removeEventListener로 정리 가능하게 함
   function onDocumentClick(e: MouseEvent): void {
     if (!langBtn.contains(e.target as Node) && !langMenu.contains(e.target as Node)) {
       closeLangMenu();
@@ -239,7 +299,64 @@ export function mountSettingsPage(root: HTMLElement): void {
   }
   document.addEventListener('click', onDocumentClick);
 
-  // 뒤로가기 시 document 리스너 정리
+  // ── 모드 전환 버튼 ──────────────────────────────────────
+
+  if (mode === 'popup') {
+    // Popup → SidePanel 전환
+    switchModeBtn.addEventListener('click', async () => {
+      // Chrome 버전 및 sidePanel API 지원 확인
+      const support = checkSidePanelSupport();
+      if (!support.isSupported) {
+        const msg = (support.message ?? t('settings', 'errorSidePanelNotSupported'))
+          .replace('{version}', String(support.version ?? ''));
+        sidepanelErrEl.textContent = msg;
+        sidepanelErrEl.className = 'settings-save-message error';
+        return;
+      }
+
+      try {
+        // ✅ sidePanel.open()은 반드시 user gesture 컨텍스트(popup)에서 직접 호출해야 함
+        // sendMessage를 거치면 user gesture로 인정되지 않아 오류 발생
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tab?.id === undefined) {
+          sidepanelErrEl.textContent = 'Could not get current tab.';
+          sidepanelErrEl.className = 'settings-save-message error';
+          return;
+        }
+
+        await chrome.sidePanel.open({ tabId: tab.id });
+
+        // 모드 저장은 background에 위임 (sidePanel.open() 이후이므로 순서 무관)
+        void chrome.runtime.sendMessage({ type: MessageType.SAVE_SIDEPANEL_MODE });
+
+        window.close();
+      } catch (e) {
+        console.error('[SettingsPage] sidePanel.open 실패:', e);
+        sidepanelErrEl.textContent = 'Failed to open Side Panel. Please try again.';
+        sidepanelErrEl.className = 'settings-save-message error';
+      }
+    });
+  } else {
+    // SidePanel → Popup 전환
+    switchModeBtn.addEventListener('click', async () => {
+      switchModeBtn.setAttribute('disabled', 'true');
+      try {
+        const response = await chrome.runtime.sendMessage({ type: MessageType.SWITCH_TO_POPUP });
+        if (response?.payload?.success) {
+          document.removeEventListener('click', onDocumentClick);
+          showSwitchToPopupMessage(root);
+        } else {
+          switchModeBtn.removeAttribute('disabled');
+        }
+      } catch (e) {
+        console.error('[SettingsPage] SWITCH_TO_POPUP 실패:', e);
+        switchModeBtn.removeAttribute('disabled');
+      }
+    });
+  }
+
+  // ── 뒤로가기 ────────────────────────────────────────────
+
   backBtn.addEventListener('click', () => {
     document.removeEventListener('click', onDocumentClick);
     router.navigate('/');
