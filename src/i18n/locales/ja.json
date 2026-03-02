@@ -39,5 +39,12 @@
     "title": "タイムスタンプを入力してください",
     "searchButton": "検索",
     "rangeLabel": "±"
+  },
+  "settings": {
+    "switchToSidePanel": "サイドパネルで開く",
+    "switchToPopup": "ポップアップに切り替え",
+    "errorSidePanelNotSupported": "サイドパネルはChrome 114以降で使用できます。現在: Chrome {version}",
+    "switchedToPopup": "ポップアップモードに切り替わりました",
+    "switchedToPopupGuide": "このパネルを閉じて拡張機能アイコンをクリックすると、ポップアップで開きます。"
   }
 }
