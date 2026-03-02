@@ -4,7 +4,7 @@
 
 import { fetchCommentThreads, fetchReplies, YouTubeApiError } from '../services/youtube.service';
 import { getStorage } from '../utils/storage.util';
-import { getViewMode, setViewMode } from '../utils/sidepanel.util';
+import { setViewMode } from '../utils/sidepanel.util';
 import { STORAGE_KEY_API_KEY, VIEW_MODE_POPUP, VIEW_MODE_SIDEPANEL } from '../constants';
 import { MessageType, ErrorCode } from '../types/message.types';
 import type {
@@ -24,20 +24,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   }
 });
 
-// ── 아이콘 클릭 (sidepanel 모드일 때만 발동) ──────────────
 
-// popup 모드: manifest의 default_popup이 자동으로 열리므로 이 이벤트는 발동 안 함
-// sidepanel 모드: setPopup('')으로 popup을 비워뒀으므로 이 이벤트가 발동됨
-chrome.action.onClicked.addListener(async (tab) => {
-  const mode = await getViewMode();
-  if (mode === VIEW_MODE_SIDEPANEL && tab.id !== undefined) {
-    try {
-      await chrome.sidePanel.open({ tabId: tab.id });
-    } catch (e) {
-      console.error('[background] sidePanel.open 실패:', e);
-    }
-  }
-});
 
 // ── 메시지 핸들러 ──────────────────────────────────────────
 
@@ -215,12 +202,14 @@ async function applyPopupMode(): Promise<void> {
   }
 }
 
-/** sidepanel 모드: action의 popup 제거 → onClicked 이벤트 활성화 */
+/** sidepanel 모드: action의 popup 제거 → openPanelOnActionClick으로 자동 열기 */
 async function applySidePanelMode(): Promise<void> {
   await setViewMode(VIEW_MODE_SIDEPANEL);
   await chrome.action.setPopup({ popup: '' });
   if (chrome.sidePanel?.setPanelBehavior) {
-    await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+    // openPanelOnActionClick: true → 아이콘 클릭 시 Chrome이 자동으로 SidePanel을 열어줌
+    // background에서 sidePanel.open()을 직접 호출하면 user gesture 오류 발생하므로 이 방식을 사용
+    await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   }
 }
 
