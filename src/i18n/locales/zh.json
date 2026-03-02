@@ -39,5 +39,12 @@
     "title": "请输入时间戳",
     "searchButton": "搜索",
     "rangeLabel": "±"
+  },
+  "settings": {
+    "switchToSidePanel": "以侧边栏方式打开",
+    "switchToPopup": "切换到弹出窗口",
+    "errorSidePanelNotSupported": "侧边栏功能需要 Chrome 114 或更高版本。当前: Chrome {version}",
+    "switchedToPopup": "已切换到弹出窗口模式",
+    "switchedToPopupGuide": "关闭此面板后，点击扩展图标即可以弹出窗口方式打开。"
   }
 }

@@ -39,5 +39,12 @@
     "title": "Please enter a timestamp",
     "searchButton": "Search",
     "rangeLabel": "±"
+  },
+  "settings": {
+    "switchToSidePanel": "Open as Side Panel",
+    "switchToPopup": "Switch to Popup",
+    "errorSidePanelNotSupported": "Side Panel requires Chrome 114 or later. Current: Chrome {version}",
+    "switchedToPopup": "Switched to Popup mode",
+    "switchedToPopupGuide": "Close this panel and click the extension icon to open as popup."
   }
 }

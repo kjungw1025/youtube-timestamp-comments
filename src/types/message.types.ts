@@ -8,6 +8,8 @@ export enum MessageType {
   GET_VIDEO_ID = 'GET_VIDEO_ID',
   SEEK_TO = 'SEEK_TO',
   ERROR = 'ERROR',
+  SAVE_SIDEPANEL_MODE = 'SAVE_SIDEPANEL_MODE',
+  SWITCH_TO_POPUP = 'SWITCH_TO_POPUP',
 }
 
 export enum ErrorCode {
@@ -42,10 +44,20 @@ export interface SeekToRequest {
   payload: { seconds: number };
 }
 
+export interface SaveSidePanelModeRequest {
+  type: MessageType.SAVE_SIDEPANEL_MODE;
+}
+
+export interface SwitchToPopupRequest {
+  type: MessageType.SWITCH_TO_POPUP;
+}
+
 export type RequestMessage =
   | FetchCommentsRequest
   | FetchRepliesRequest
-  | GetVideoIdRequest;
+  | GetVideoIdRequest
+  | SaveSidePanelModeRequest
+  | SwitchToPopupRequest;
 
 // ── 응답 타입 ──────────────────────────────────────────────
 
@@ -71,6 +83,11 @@ export interface GetVideoIdResponse {
   };
 }
 
+export interface ViewModeResponse {
+  type: MessageType.SAVE_SIDEPANEL_MODE | MessageType.SWITCH_TO_POPUP;
+  payload: { success: boolean };
+}
+
 export interface ErrorResponse {
   type: MessageType.ERROR;
   error: string;
@@ -82,4 +99,5 @@ export type ResponseMessage =
   | FetchCommentsResponse
   | FetchRepliesResponse
   | GetVideoIdResponse
+  | ViewModeResponse
   | ErrorResponse;
