@@ -331,7 +331,7 @@ export function mountSettingsPage(root: HTMLElement, mode: ViewMode = 'popup'): 
 
         window.close();
       } catch (e) {
-        console.error('[SettingsPage] sidePanel.open 실패:', e);
+        console.error('[SettingsPage] Failed to open Side Panel:', e);
         sidepanelErrEl.textContent = 'Failed to open Side Panel. Please try again.';
         sidepanelErrEl.className = 'settings-save-message error';
       }
@@ -349,7 +349,7 @@ export function mountSettingsPage(root: HTMLElement, mode: ViewMode = 'popup'): 
           switchModeBtn.removeAttribute('disabled');
         }
       } catch (e) {
-        console.error('[SettingsPage] SWITCH_TO_POPUP 실패:', e);
+        console.error('[SettingsPage] Failed to switch to Popup:', e);
         switchModeBtn.removeAttribute('disabled');
       }
     });

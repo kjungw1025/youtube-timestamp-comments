@@ -169,7 +169,7 @@ async function handleSaveSidePanelMode(
       payload: { success: true },
     });
   } catch (e) {
-    console.error('[background] SAVE_SIDEPANEL_MODE 실패:', e);
+    console.error('[background] Failed to save SidePanel mode:', e);
     sendResponse({ type: MessageType.ERROR, error: 'Failed to save sidepanel mode.' });
   }
 }
@@ -186,7 +186,7 @@ async function handleSwitchToPopup(
       payload: { success: true },
     });
   } catch (e) {
-    console.error('[background] SWITCH_TO_POPUP 실패:', e);
+    console.error('[background] Failed to switch to Popup mode:', e);
     sendResponse({ type: MessageType.ERROR, error: 'Failed to switch to popup mode.' });
   }
 }
