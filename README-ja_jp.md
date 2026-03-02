@@ -34,10 +34,14 @@
        <th width="33%">
           <p><a title="view-detailed-comments"></a> 特定タイムスタンプのコメント詳細表示
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/comment-search-detail-en.gif">
+
+   <tr>
        <th width="33%">
           <p><a title="jump-to-a-specific-timestamp"></a> 指定タイムスタンプへのジャンプ機能
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-en.gif">
-
+       <th width="33%">
+          <p><a title="switch-between-popup-and-sidepanel"></a> ポップアップとサイドパネルの切り替え
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/sidepanel-en.gif">
 </table>
 
 
