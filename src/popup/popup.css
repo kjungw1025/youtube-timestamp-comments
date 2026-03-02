@@ -70,6 +70,7 @@ body {
 
 /* Material Icons 크기 기본값 */
 .material-icons { font-size: 18px; line-height: 1; user-select: none; }
+.material-symbols-outlined { font-size: 18px; line-height: 1; user-select: none; }
 
 /* ── 앱 래퍼 ─────────────────────────────────────────────── */
 .app-wrapper {
