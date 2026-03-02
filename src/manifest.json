@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Timestamp Comments",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "View and search YouTube comments containing timestamps",
 
   "permissions": ["storage", "activeTab", "tabs", "sidePanel"],

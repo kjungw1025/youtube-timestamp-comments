@@ -1,6 +1,6 @@
 {
   "name": "youtube-timestamp-comments",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Chrome extension to view and search YouTube comments containing timestamps",
   "scripts": {
     "dev": "webpack --mode development --watch",
