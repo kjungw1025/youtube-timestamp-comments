@@ -34,10 +34,14 @@
        <th width="33%">
           <p><a title="view-detailed-comments"></a> 查看特定时间戳的评论详情
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/comment-search-detail-en.gif">
+
+   <tr>
        <th width="33%">
           <p><a title="jump-to-a-specific-timestamp"></a> 跳转到特定时间戳
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-en.gif">
-
+       <th width="33%">
+          <p><a title="switch-between-popup-and-sidepanel"></a> 弹出窗口与侧边栏切换
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/sidepanel-en.gif">
 </table>
 
 
