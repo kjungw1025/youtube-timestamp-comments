@@ -10,16 +10,16 @@
 
 ---
 
-为了找到特定时间戳区间的评论反应，反复滚动页面实在不方便。
+为了寻找特定时间戳区间的评论反应而反复滚动页面，让人感到十分繁琐。
 
-为了解决这一不便，我制作了一个简单的基于YouTube时间戳的评论浏览Chrome扩展程序。
+为了解决这个痛点，制作了一款简单的、基于 YouTube 时间戳的评论浏览 Chrome 扩展程序。
 
-通过该功能，您可以快速查看其他用户的各种反应，并以更沉浸的方式享受 YouTube。
+通过这款扩展程序，您可以快速查看其他用户的各种反应，享受更具沉浸感的 YouTube 观看体验。
 
 主要功能
-- 基于时间戳的评论列表查看
-- 按最新或最热对时间戳排序
-- 跳转到特定时间戳
+- 查看基于时间戳的评论列表
+- 按最新/最热对时间戳进行排序
+- 将视频跳转至特定时间戳
 - 查看特定时间戳的评论详情
 
 ## Highlights
@@ -34,10 +34,14 @@
        <th width="33%">
           <p><a title="view-detailed-comments"></a> 查看特定时间戳的评论详情
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/comment-search-detail-en.gif">
+
+   <tr>
        <th width="33%">
           <p><a title="jump-to-a-specific-timestamp"></a> 跳转到特定时间戳
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-en.gif">
-
+       <th width="33%">
+          <p><a title="switch-between-popup-and-sidepanel"></a> 弹出窗口与侧边栏切换
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/sidepanel-en.gif">
 </table>
 
 

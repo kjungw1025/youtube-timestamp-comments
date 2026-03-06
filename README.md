@@ -34,10 +34,14 @@ Key Features
        <th width="33%">
           <p><a title="view-detailed-comments"></a> View detailed comments for a specific timestamp
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/comment-search-detail-en.gif">
+
+   <tr>
        <th width="33%">
           <p><a title="jump-to-a-specific-timestamp"></a> Jump to a specific timestamp in the video
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-en.gif">
-
+       <th width="33%">
+          <p><a title="switch-between-popup-and-sidepanel"></a> Switch Between Popup and Side Panel
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/sidepanel-en.gif">
 </table>
 
 

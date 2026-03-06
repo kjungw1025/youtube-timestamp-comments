@@ -34,10 +34,14 @@
 		<th width="33%">
 			<p><a title="view-detailed-comments"></a> 특정 타임스탬프에 대한 댓글 상세 조회
 			<p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/comment-search-detail-kor.gif">
-		<th width="33%">
-			<p><a title="jump-to-a-specific-timestamp"></a> 특정 타임스탬프로 영상 이동
-			<p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-kor.gif">
 
+   <tr>
+       <th width="33%">
+          <p><a title="jump-to-a-specific-timestamp"></a> 특정 타임스탬프로 영상 이동
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-en.gif">
+       <th width="33%">
+          <p><a title="switch-between-popup-and-sidepanel"></a> 팝업과 사이드 패널 간 전환
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/sidepanel-kor.gif">
 </table>
 
 

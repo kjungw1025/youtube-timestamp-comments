@@ -19,6 +19,7 @@ export const TIMESTAMP_RANGE_DEFAULT = 0; // 기본 ± 범위 (초)
 export const STORAGE_KEY_API_KEY = 'apiKey';
 export const STORAGE_KEY_THEME = 'theme';
 export const STORAGE_KEY_LANGUAGE = 'language';
+export const STORAGE_KEY_VIEW_MODE = 'viewMode';
 
 // ── Session 캐시 키 ────────────────────────────────────────
 export const SESSION_KEY_COMMENTS = 'cachedComments';
@@ -32,3 +33,8 @@ export const THEME_LIGHT = 'light';
 
 // ── 기본 언어 ──────────────────────────────────────────────
 export const DEFAULT_LANGUAGE = 'en';
+
+// ── SidePanel ─────────────────────────────────────────────
+export const MIN_CHROME_VERSION_SIDEPANEL = 114;
+export const VIEW_MODE_POPUP = 'popup' as const;
+export const VIEW_MODE_SIDEPANEL = 'sidepanel' as const;
