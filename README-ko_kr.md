@@ -38,7 +38,7 @@
    <tr>
        <th width="33%">
           <p><a title="jump-to-a-specific-timestamp"></a> 특정 타임스탬프로 영상 이동
-          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-en.gif">
+          <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/move-timestamp-kor.gif">
        <th width="33%">
           <p><a title="switch-between-popup-and-sidepanel"></a> 팝업과 사이드 패널 간 전환
           <p><img src="https://chrome-extension-youtube-timestamp-comments.s3.ap-northeast-2.amazonaws.com/sidepanel-kor.gif">
