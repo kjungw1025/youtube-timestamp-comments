@@ -12,7 +12,7 @@
     "@types/chrome": "^0.0.268",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
-    "copy-webpack-plugin": "^12.0.0",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^7.0.0",
     "eslint": "^8.57.0",
     "mini-css-extract-plugin": "^2.9.0",
